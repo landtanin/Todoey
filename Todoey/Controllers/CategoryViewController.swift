@@ -13,13 +13,12 @@ class CategoryViewController: UITableViewController {
 
     let realm = try! Realm()
     
-    var categoryArray = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var categories: Results<Category>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadCategories()
+//        loadCategories()
         
     }
     
@@ -28,16 +27,14 @@ class CategoryViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        let item = categoryArray[indexPath.row]
-        
-        cell.textLabel?.text = item.name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories"
         
         return cell
         
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     // MARK: - Data Manipulation Methods, save(), load(), CRUD
@@ -57,13 +54,14 @@ class CategoryViewController: UITableViewController {
     // loadCategories(<externalParam> <internalParam>: NSFetchRequest<TableName> = <defaultValue>)
     func loadCategories(){
         
+        categories = realm.objects(Category.self)
 //        let request: NSFetchRequest<Category> = Category.fetchRequest()
 //        do {
-//            categoryArray = try context.fetch(request)
+//            categories = try context.fetch(request)
 //        } catch {
 //            print("Error fetching data from context \(error)")
 //        }
-//        tableView.reloadData()
+        tableView.reloadData()
     }
     
     // MARK: - Add New Categories
@@ -80,8 +78,6 @@ class CategoryViewController: UITableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
-            
-            self.categoryArray.append(newCategory)
             
             self.save(category: newCategory)
         }
@@ -110,7 +106,7 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow{
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
         }
         
     }
