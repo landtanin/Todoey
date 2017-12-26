@@ -18,7 +18,7 @@ class CategoryViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        loadCategories()
+        loadCategories()
         
     }
     
@@ -55,13 +55,9 @@ class CategoryViewController: UITableViewController {
     func loadCategories(){
         
         categories = realm.objects(Category.self)
-//        let request: NSFetchRequest<Category> = Category.fetchRequest()
-//        do {
-//            categories = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
+
         tableView.reloadData()
+        
     }
     
     // MARK: - Add New Categories
