@@ -62,7 +62,13 @@ class TodoListViewController: UITableViewController {
             do {
                 
                 try realm.write {
+                    
+                    // update to Realm (crUd)
                     item.done = !item.done
+                    
+                    // delete from realm (cruD)(just to show how the delete works)
+//                    realm.delete(item)
+                    
                 }
                 
             } catch {
@@ -73,10 +79,6 @@ class TodoListViewController: UITableViewController {
         }
         
         tableView.reloadData()
-        
-//        todoItems[indexPath.row].done = itemArray[indexPath.row].done
-//
-//        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -128,6 +130,7 @@ class TodoListViewController: UITableViewController {
     // loadItems(<externalParam> <internalParam>: NSFetchRequest<Item> = <defaultVar>)
     func loadItems(){
         
+        // Read from Realm (cRud)
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
 //        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
