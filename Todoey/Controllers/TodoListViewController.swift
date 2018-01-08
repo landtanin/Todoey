@@ -61,9 +61,9 @@ class TodoListViewController: UITableViewController {
             
             do {
                 
+                // update to Realm (crUd)
                 try realm.write {
                     
-                    // update to Realm (crUd)
                     item.done = !item.done
                     
                     // delete from realm (cruD)(just to show how the delete works)
@@ -95,13 +95,14 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             
             // what will happen once the user clicks the Add item
-
             if let currentCategory = self.selectedCategory {
                 
                 do {
                     try self.realm.write {
                         let newItem = Item()
+                        let newDate = Date()
                         newItem.title = textField.text!
+                        newItem.dateCreated = newDate
                         currentCategory.items.append(newItem)
                     }
                 } catch {
@@ -133,51 +134,33 @@ class TodoListViewController: UITableViewController {
         // Read from Realm (cRud)
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
 
-//        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
-//
-//        // optional binding
-//        if let addtionalPredicate = predicate {
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//
-//        do {
-//            itemArray = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
         tableView.reloadData()
     }
     
 }
 
-//extension TodoListViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//        let request : NSFetchRequest<Item> = Item.fetchRequest()
-//
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//
-//        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//        loadItems(with: request, predicate: predicate)
-//
-//    }
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//
-//        }
-//
-//    }
-//
-//}
+extension TodoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+
+       todoItems = todoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
+        
+        tableView.reloadData()
+
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if searchBar.text?.count == 0 {
+            loadItems()
+
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+
+        }
+
+    }
+
+}
 

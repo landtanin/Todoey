@@ -10,6 +10,8 @@ import Foundation
 import RealmSwift
 
 class Category: Object{
+    
+    // dynamic: we can monitor for changing while the app is running
     @objc dynamic var name : String = ""
     
     // relationship to List sub-data class
