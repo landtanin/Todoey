@@ -13,6 +13,7 @@ class Category: Object{
     
     // dynamic: we can monitor for changing while the app is running
     @objc dynamic var name : String = ""
+    @objc dynamic var color : String = ""
     
     // relationship to List sub-data class
     let items = List<Item>()
