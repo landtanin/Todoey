@@ -15,6 +15,7 @@ class TodoListViewController: SwipeTableViewController {
     var todoItems: Results<Item>?
     let realm = try! Realm()
     
+    @IBOutlet var searchBar: UISearchBar!
     var selectedCategory : Category? {
         didSet{
             loadItems()
@@ -22,13 +23,32 @@ class TodoListViewController: SwipeTableViewController {
     }
     //    let defaults = UserDefaults.standard
     
-    
+    // onCreate in Android
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.separatorStyle = .none
+        
+    }
+    
+    // onStart in Android, this is the point where we can make sure that this class is alreday stack on the navigation view (navigation view is ready to be called and hence won't return nil)
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // change the color of both nav and status bars
+        if let colourHex = selectedCategory?.color{
+
+            // make navBar title consistent to the category 
+            title = selectedCategory!.name
+            
+            // make sure the navigationBar is exist
+            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
+            
+            // change its color
+            navBar.barTintColor = UIColor(hexString: colourHex)
+            searchBar.barTintColor = UIColor(hexString: colourHex)
+        }
         
     }
     
