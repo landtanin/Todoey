@@ -36,26 +36,37 @@ class TodoListViewController: SwipeTableViewController {
     // onStart in Android, this is the point where we can make sure that this class is alreday stack on the navigation view (navigation view is ready to be called and hence won't return nil)
     override func viewWillAppear(_ animated: Bool) {
         
-        // change the color of both nav and status bars
-        guard let colourHex = selectedCategory?.color else {fatalError()}
-        
         // make navBar title consistent to the category
         title = selectedCategory?.name
         
+        // change the color of both nav and status bars
+        guard let colourHex = selectedCategory?.color else {fatalError()}
+        
+        updateNavBar(withHexCode: colourHex)
+        
+    }
+    
+    // onStop, reset the navBar colors
+    override func viewWillDisappear(_ animated: Bool) {
+        
+        updateNavBar(withHexCode: "53C187")
+        
+    }
+    
+    // MARK: - Nav Bar Setup Methods
+    func updateNavBar(withHexCode colourHexCode: String){
         // make sure the navigationBar is exist
         guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
         
+        
         // change items in nav area colors
-        guard let navBarColour = UIColor(hexString: colourHex) else {fatalError()}
+        guard let navBarColour = UIColor(hexString: colourHexCode) else {fatalError()}
         
         navBar.barTintColor = navBarColour
         navBar.tintColor = ContrastColorOf(navBarColour, returnFlat: true)
         navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
         
         searchBar.barTintColor = navBarColour
-        
-        
-        
         
     }
     
