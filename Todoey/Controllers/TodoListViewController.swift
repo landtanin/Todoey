@@ -27,7 +27,7 @@ class TodoListViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.separatorStyle = .none
         
@@ -37,18 +37,25 @@ class TodoListViewController: SwipeTableViewController {
     override func viewWillAppear(_ animated: Bool) {
         
         // change the color of both nav and status bars
-        if let colourHex = selectedCategory?.color{
-
-            // make navBar title consistent to the category 
-            title = selectedCategory!.name
-            
-            // make sure the navigationBar is exist
-            guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
-            
-            // change its color
-            navBar.barTintColor = UIColor(hexString: colourHex)
-            searchBar.barTintColor = UIColor(hexString: colourHex)
-        }
+        guard let colourHex = selectedCategory?.color else {fatalError()}
+        
+        // make navBar title consistent to the category
+        title = selectedCategory?.name
+        
+        // make sure the navigationBar is exist
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation controller does not exist")}
+        
+        // change items in nav area colors
+        guard let navBarColour = UIColor(hexString: colourHex) else {fatalError()}
+        
+        navBar.barTintColor = navBarColour
+        navBar.tintColor = ContrastColorOf(navBarColour, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        
+        searchBar.barTintColor = navBarColour
+        
+        
+        
         
     }
     
